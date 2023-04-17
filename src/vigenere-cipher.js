@@ -20,13 +20,48 @@ const { NotImplementedError } = require('../extensions/index.js');
  * 
  */
 class VigenereCipheringMachine {
-  encrypt() {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
+  constructor(dir = true) {
+    this.dir = dir
   }
-  decrypt() {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
+
+  validation(m, k) {
+    if (!m || !k) throw new Error('Incorrect arguments!')
+  }
+
+  encrypt(m, k) {
+    this.validation(m, k)
+
+    m = m.toUpperCase()
+    k = k.toUpperCase()
+    console.log(m, k);
+    let r = '';
+    for (let i = 0, j = 0; i < m.length; i++) {
+      if (/[A-Z]/.test(m[i])) {
+        r += String.fromCharCode(((m[i].charCodeAt(0) + (k[j % k.length].charCodeAt(0) - 65) - 65) % 26) + 65)
+        j++
+      } else {
+        r += m[i]
+      }
+    }
+    return this.dir ? r : r.split('').reverse().join('')
+  }
+
+
+  decrypt(m, k) {
+    this.validation(m, k)
+
+    m = m.toUpperCase()
+    k = k.toUpperCase()
+    let r = ''
+    for (let i = 0, j = 0; i < m.length; i++) {
+      if (/[A-Z]/.test(m[i])) {
+        r += String.fromCharCode(((m[i].charCodeAt(0) - (k[j % k.length].charCodeAt(0) - 65) - 65 + 26) % 26) + 65)
+        j++
+      } else {
+        r += m[i]
+      }
+    }
+    return this.dir ? r : r.split('').reverse().join('')
   }
 }
 
